@@ -1,6 +1,7 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { criarJogo } from '../services/api'
+import { listarCategorias } from '../services/api'
 import FormJogo from '../components/FormJogo'
 
 /**
@@ -11,8 +12,13 @@ import FormJogo from '../components/FormJogo'
 function PaginaNovo() {
   const navigate = useNavigate()
 
+  const [categorias, setCategorias] = useState([])
   const [carregando, setCarregando] = useState(false) // true enquanto salva
   const [erro, setErro]             = useState(null)  // mensagem de erro da API
+
+  useEffect(() => { 
+    listarCategorias().then(setCategorias)
+  }, [])
 
   // --------------------------------------------------------
   // Chamada quando o FormJogo envia os dados
@@ -46,6 +52,7 @@ function PaginaNovo() {
       <h1 className="page-title">Novo jogo</h1>
 
       <FormJogo
+        categorias={categorias}
         onSubmit={handleSubmit}
         onCancelar={handleCancelar}
         carregando={carregando}

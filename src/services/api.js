@@ -7,6 +7,7 @@
 
 // URL base da API. Se o backend estiver em outra porta ou servidor, altere aqui.
 const BASE_URL = 'http://localhost:8080/jogos'
+const BASE_URL_CATEGORIAS = 'http://localhost:8080/categorias'
 
 /**
  * Função auxiliar para fazer requisições HTTP.
@@ -118,3 +119,9 @@ export async function excluirJogo(id) {
 export async function buscarPorCategoria(categoria) {
   return request(`${BASE_URL}/categoria/${encodeURIComponent(categoria)}`)
 }
+
+
+export async function listarCategorias() {
+  return request(BASE_URL_CATEGORIAS)
+}
+

@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import { buscarJogo, atualizarJogo } from '../services/api'
+import { listarCategorias } from '../services/api'
 import FormJogo from '../components/FormJogo'
 
 /**
@@ -14,10 +15,11 @@ function PaginaEditar() {
   const { id }      = useParams()    // pega o id da URL
   const navigate    = useNavigate()
 
-  const [jogo, setJogo]           = useState(null)  // dados do jogo a editar
+  const [jogo, setJogo]             = useState(null)  // dados do jogo a editar
+  const [categorias, setCategorias] = useState([])
   const [carregando, setCarregando] = useState(false) // spinner do botão salvar
-  const [buscando, setBuscando]   = useState(true)  // spinner da carga inicial
-  const [erro, setErro]           = useState(null)  // erro da API
+  const [buscando, setBuscando]     = useState(true)  // spinner da carga inicial
+  const [erro, setErro]             = useState(null)  // erro da API
 
   // --------------------------------------------------------
   // Ao montar o componente, busca os dados do jogo pelo id
@@ -36,6 +38,8 @@ function PaginaEditar() {
     }
 
     carregarJogo()
+
+    listarCategorias().then(setCategorias)
   }, [id]) // executa novamente se o id mudar
 
   // --------------------------------------------------------
@@ -98,6 +102,7 @@ function PaginaEditar() {
       {/* Passa os dados do jogo como valor inicial para o formulário */}
       <FormJogo
         jogoInicial={jogo}
+        categorias={categorias}
         onSubmit={handleSubmit}
         onCancelar={handleCancelar}
         carregando={carregando}

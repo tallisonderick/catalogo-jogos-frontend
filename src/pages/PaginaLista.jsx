@@ -140,7 +140,7 @@ function PaginaLista() {
             <div key={jogo.id} className="jogo-card">
 
               {/* Categoria */}
-              <span className="jogo-card-categoria">{jogo.categoria}</span>
+              <span className="jogo-card-categoria">{jogo.categoria?.nome}</span>
 
               {/* Nome */}
               <h2 className="jogo-card-nome">{jogo.nome}</h2>

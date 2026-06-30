@@ -10,7 +10,7 @@ import { useState, useEffect } from 'react'
  *   carregando   → boolean: desabilita o botão enquanto salva
  *   erro         → string com mensagem de erro vinda do componente pai
  */
-function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
+function FormJogo({ jogoInicial, categorias, onSubmit, onCancelar, carregando, erro }) {
 
   // --------------------------------------------------------
   // Estado do formulário
@@ -19,7 +19,7 @@ function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
   // --------------------------------------------------------
   const [form, setForm] = useState({
     nome:          jogoInicial?.nome          ?? '',
-    categoria:     jogoInicial?.categoria     ?? '',
+    categoriaId:   jogoInicial?.categoria?.id ?? '',
     minJogadores:  jogoInicial?.minJogadores  ?? '',
     maxJogadores:  jogoInicial?.maxJogadores  ?? '',
     anoLancamento: jogoInicial?.anoLancamento ?? '',
@@ -34,7 +34,7 @@ function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
     if (jogoInicial) {
       setForm({
         nome:          jogoInicial.nome          ?? '',
-        categoria:     jogoInicial.categoria     ?? '',
+        categoriaId:   jogoInicial.categoria?.id ?? '',
         minJogadores:  jogoInicial.minJogadores  ?? '',
         maxJogadores:  jogoInicial.maxJogadores  ?? '',
         anoLancamento: jogoInicial.anoLancamento ?? '',
@@ -64,7 +64,7 @@ function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
     if (!form.nome.trim())
       novosErros.nome = 'Nome é obrigatório'
 
-    if (!form.categoria.trim())
+    if (!form.categoriaId)
       novosErros.categoria = 'Categoria é obrigatória'
 
     if (!form.minJogadores)
@@ -100,7 +100,8 @@ function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
     // Converte campos numéricos de string para número
     const dados = {
       nome:          form.nome.trim(),
-      categoria:     form.categoria.trim(),
+      //categoria:     form.categoria.trim(),
+      categoria:     { id: Number(form.categoriaId) },
       minJogadores:  Number(form.minJogadores),
       maxJogadores:  Number(form.maxJogadores),
       anoLancamento: form.anoLancamento ? Number(form.anoLancamento) : null,
@@ -143,6 +144,7 @@ function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
           <label className="form-label">
             Categoria <span>*</span>
           </label>
+          {/*
           <input
             type="text"
             name="categoria"
@@ -152,6 +154,15 @@ function FormJogo({ jogoInicial, onSubmit, onCancelar, carregando, erro }) {
             placeholder="Ex: Estratégia, Cooperativo, Família..."
             maxLength={100}
           />
+          */}
+          <select name="categoriaId" value={form.categoriaId} onChange={handleChange}>
+            <option value="">Selecione a categoria</option>
+            {categorias.map(c => (
+              <option key={c.id} value={c.id}>
+                {c.nome}
+              </option>
+            ))}
+          </select>
           {erros.categoria && <p className="form-erro">{erros.categoria}</p>}
         </div>
 
