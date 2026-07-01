@@ -15,10 +15,15 @@ function Navbar() {
           🎲 Catálogo de <span>Jogos</span>
         </Link>
 
-        {/* Link para cadastrar novo jogo */}
-        <Link to="/novo" className="navbar-link">
-          + Novo Jogo
-        </Link>
+        {/* Links do menu */}
+        <div style={{ display: 'flex', gap: '1rem' }}>
+          <Link to="/novojogo" className="navbar-link">
+            + Novo Jogo
+          </Link>
+          <Link to="/novacategoria" className="navbar-link">
+            + Nova Categoria
+          </Link>
+        </div>
       </div>
     </nav>
   )

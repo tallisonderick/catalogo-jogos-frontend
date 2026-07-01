@@ -8,6 +8,8 @@
 // URL base da API. Se o backend estiver em outra porta ou servidor, altere aqui.
 const BASE_URL = 'http://localhost:8080/jogos'
 const BASE_URL_CATEGORIAS = 'http://localhost:8080/categorias'
+const BASE_URL_COLECAO = 'http://localhost:8080/colecao'
+const BASE_URL_DESEJOS = 'http://localhost:8080/desejos'
 
 /**
  * Função auxiliar para fazer requisições HTTP.
@@ -123,5 +125,24 @@ export async function buscarPorCategoria(categoria) {
 
 export async function listarCategorias() {
   return request(BASE_URL_CATEGORIAS)
+}
+
+export async function criarCategoria(categoria) {
+  return request(BASE_URL_CATEGORIAS, {
+    method: 'POST',
+    body: categoria,
+  })
+}
+
+export async function atualizarStatusTenho(jogoId, status) {
+  return request(`${BASE_URL_COLECAO}/tenho/${jogoId}?status=${status}`, {
+    method: 'POST'
+  })
+}
+
+export async function atualizarStatusQuero(jogoId, status) {
+  return request(`${BASE_URL_DESEJOS}/quero/${jogoId}?status=${status}`, {
+    method: 'POST'
+  })
 }
 

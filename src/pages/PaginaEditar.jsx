@@ -38,8 +38,8 @@ function PaginaEditar() {
     }
 
     carregarJogo()
-
     listarCategorias().then(setCategorias)
+
   }, [id]) // executa novamente se o id mudar
 
   // --------------------------------------------------------

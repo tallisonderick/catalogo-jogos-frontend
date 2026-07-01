@@ -18,12 +18,12 @@ function FormJogo({ jogoInicial, categorias, onSubmit, onCancelar, carregando, e
   // Se jogoInicial existir (modo edição), pré-preenche os campos.
   // --------------------------------------------------------
   const [form, setForm] = useState({
-    nome:          jogoInicial?.nome          ?? '',
-    categoriaId:   jogoInicial?.categoria?.id ?? '',
-    minJogadores:  jogoInicial?.minJogadores  ?? '',
-    maxJogadores:  jogoInicial?.maxJogadores  ?? '',
+    nome: jogoInicial?.nome ?? '',
+    categoriaId: jogoInicial?.categoria?.id ?? '',
+    minJogadores: jogoInicial?.minJogadores ?? '',
+    maxJogadores: jogoInicial?.maxJogadores ?? '',
     anoLancamento: jogoInicial?.anoLancamento ?? '',
-    descricao:     jogoInicial?.descricao     ?? '',
+    descricao: jogoInicial?.descricao ?? '',
   })
 
   // Erros de validação campo a campo
@@ -33,12 +33,12 @@ function FormJogo({ jogoInicial, categorias, onSubmit, onCancelar, carregando, e
   useEffect(() => {
     if (jogoInicial) {
       setForm({
-        nome:          jogoInicial.nome          ?? '',
-        categoriaId:   jogoInicial.categoria?.id ?? '',
-        minJogadores:  jogoInicial.minJogadores  ?? '',
-        maxJogadores:  jogoInicial.maxJogadores  ?? '',
+        nome: jogoInicial.nome ?? '',
+        categoriaId: jogoInicial.categoria?.id ?? '',
+        minJogadores: jogoInicial.minJogadores ?? '',
+        maxJogadores: jogoInicial.maxJogadores ?? '',
         anoLancamento: jogoInicial.anoLancamento ?? '',
-        descricao:     jogoInicial.descricao     ?? '',
+        descricao: jogoInicial.descricao ?? '',
       })
     }
   }, [jogoInicial])
@@ -77,7 +77,7 @@ function FormJogo({ jogoInicial, categorias, onSubmit, onCancelar, carregando, e
     else if (Number(form.maxJogadores) < Number(form.minJogadores))
       novosErros.maxJogadores = 'Deve ser maior ou igual ao mínimo'
 
-    if (form.anoLancamento && Number(form.anoLancamento) < 1900)
+    if (form.anoLancamento && Number(form.anoLancamento) < 1500)
       novosErros.anoLancamento = 'Ano inválido'
 
     return novosErros
@@ -99,13 +99,12 @@ function FormJogo({ jogoInicial, categorias, onSubmit, onCancelar, carregando, e
     // Monta o objeto a ser enviado para a API
     // Converte campos numéricos de string para número
     const dados = {
-      nome:          form.nome.trim(),
-      //categoria:     form.categoria.trim(),
-      categoria:     { id: Number(form.categoriaId) },
-      minJogadores:  Number(form.minJogadores),
-      maxJogadores:  Number(form.maxJogadores),
+      nome: form.nome.trim(),
+      categoria: { id: Number(form.categoriaId) },
+      minJogadores: Number(form.minJogadores),
+      maxJogadores: Number(form.maxJogadores),
       anoLancamento: form.anoLancamento ? Number(form.anoLancamento) : null,
-      descricao:     form.descricao.trim() || null,
+      descricao: form.descricao.trim() || null,
     }
 
     onSubmit(dados)
@@ -144,19 +143,13 @@ function FormJogo({ jogoInicial, categorias, onSubmit, onCancelar, carregando, e
           <label className="form-label">
             Categoria <span>*</span>
           </label>
-          {/*
-          <input
-            type="text"
-            name="categoria"
-            className={`form-input ${erros.categoria ? 'erro' : ''}`}
-            value={form.categoria}
+          <select
+            className="form-input"
+            name="categoriaId"
+            value={form.categoriaId}
             onChange={handleChange}
-            placeholder="Ex: Estratégia, Cooperativo, Família..."
-            maxLength={100}
-          />
-          */}
-          <select name="categoriaId" value={form.categoriaId} onChange={handleChange}>
-            <option value="">Selecione a categoria</option>
+          >
+            <option value=""> Selecione a categoria </option>
             {categorias.map(c => (
               <option key={c.id} value={c.id}>
                 {c.nome}

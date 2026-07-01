@@ -10,7 +10,7 @@ import ModalConfirmacao from '../components/ModalConfirmacao'
  *   useState  → guarda dados que mudam (lista de jogos, loading, erros...)
  *   useEffect → executa código quando o componente é montado (busca os jogos)
  */
-function PaginaLista() {
+function PaginaMinhaColecao() {
 
   // --------------------------------------------------------
   // Estados do componente
@@ -27,10 +27,6 @@ function PaginaLista() {
   })
   const [filtroCategoria, setFiltroCategoria] = useState('')
   const [filtroNome, setFiltroNome] = useState('')
-  const [filtroMinJogadores, setFiltroMinJogadores] = useState('')
-  const [filtroMaxJogadores, setFiltroMaxJogadores] = useState('')
-  const [filtroAnoInicio, setFiltroAnoInicio] = useState('')
-  const [filtroAnoFim, setFiltroAnoFim] = useState('')
   const [estaBuscando, setEstaBuscando] = useState(false)
   const [categorias, setCategorias] = useState([])
   const [paginaAtual, setPaginaAtual] = useState(1)
@@ -61,7 +57,9 @@ function PaginaLista() {
       setErro(null)
       const dados = await listarJogos()
 
-      setJogos(dados || [])
+      let jogosFiltrados = dados || []
+      jogosFiltrados = jogosFiltrados.filter(jogo => jogo.tenho === true)
+      setJogos(jogosFiltrados)
       setPaginaAtual(1)
     } catch (e) {
       setErro('Não foi possível carregar os jogos. Verifique se o backend está rodando.')
@@ -117,27 +115,13 @@ function PaginaLista() {
       }
 
       dados = dados || []
+      dados = dados.filter(jogo => jogo.tenho === true)
 
       if (filtroNome) {
         const termo = filtroNome.toLowerCase()
         dados = dados.filter(jogo => jogo.nome.toLowerCase().includes(termo))
       }
 
-      if (filtroMinJogadores && filtroMaxJogadores) {
-        dados = dados.filter(jogo => jogo.minJogadores >= parseInt(filtroMinJogadores) && jogo.maxJogadores <= parseInt(filtroMaxJogadores))
-      } else if (filtroMinJogadores) {
-        dados = dados.filter(jogo => jogo.minJogadores === parseInt(filtroMinJogadores))
-      } else if (filtroMaxJogadores) {
-        dados = dados.filter(jogo => jogo.maxJogadores === parseInt(filtroMaxJogadores))
-      }
-
-      if (filtroAnoInicio && filtroAnoFim) {
-        dados = dados.filter(jogo => jogo.anoLancamento >= parseInt(filtroAnoInicio) && jogo.anoLancamento <= parseInt(filtroAnoFim))
-      } else if (filtroAnoInicio) {
-        dados = dados.filter(jogo => jogo.anoLancamento >= parseInt(filtroAnoInicio))
-      } else if (filtroAnoFim) {
-        dados = dados.filter(jogo => jogo.anoLancamento <= parseInt(filtroAnoFim))
-      }
 
       setJogos(dados)
       setPaginaAtual(1)
@@ -151,10 +135,6 @@ function PaginaLista() {
   function redefinirFiltros() {
     setFiltroNome('')
     setFiltroCategoria('')
-    setFiltroMinJogadores('')
-    setFiltroMaxJogadores('')
-    setFiltroAnoInicio('')
-    setFiltroAnoFim('')
   }
 
   async function handleCheckbox(jogoId, tipo, checked) {
@@ -254,14 +234,10 @@ function PaginaLista() {
       {/* Título e links de navegação */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '1.5rem' }}>
         <Link to="/" style={{ textDecoration: 'none' }}>
-          <h1 className="page-title" style={{ margin: 0 }}>
-            Catálogo de Jogos
-          </h1>
+          <h1 className="page-title" style={{ margin: 0, color: '#888' }}>Catálogo de Jogos</h1>
         </Link>
         <Link to="/minhacolecao" style={{ textDecoration: 'none' }}>
-          <h1 className="page-title" style={{ margin: 0, color: '#888' }}>
-            Minha Coleção
-          </h1>
+          <h1 className="page-title" style={{ margin: 0 }}>Minha Coleção</h1>
         </Link>
         <Link to="/listadesejos" style={{ textDecoration: 'none' }}>
           <h1 className="page-title" style={{ margin: 0, color: '#888' }}>
@@ -302,19 +278,11 @@ function PaginaLista() {
             onKeyDown={e => e.key === 'Enter' && realizarBusca()}
             style={{ flex: 1, margin: 0 }}
           />
-          <button className="btn btn-primary" onClick={realizarBusca} style={{ margin: 0 }}>
-            Buscar
-          </button>
-          <button className="btn btn-primary" onClick={redefinirFiltros} style={{ margin: 0 }}>
-            Limpar Filtros
-          </button>
-        </div>
-        <div style={{ display: 'flex', gap: '1rem' }}>
           <select
             className="form-input"
             value={filtroCategoria}
             onChange={e => setFiltroCategoria(e.target.value)}
-            style={{ flex: 1, margin: 0 }}
+            style={{ flex: 0.3, margin: 0 }}
           >
             <option value="">Todas as Categorias</option>
             {categorias.map(cat => (
@@ -323,56 +291,12 @@ function PaginaLista() {
               </option>
             ))}
           </select>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 2 }}>
-            <span style={{ whiteSpace: 'nowrap', fontWeight: '500', color: '#555' }}>Nº de Jogadores:</span>
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              className="form-input"
-              placeholder="Mín"
-              value={filtroMinJogadores}
-              onChange={e => setFiltroMinJogadores(e.target.value.replace(/\D/g, ''))}
-              onKeyDown={e => e.key === 'Enter' && realizarBusca()}
-              style={{ flex: 1, margin: 0 }}
-            />
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              className="form-input"
-              placeholder="Máx"
-              value={filtroMaxJogadores}
-              onChange={e => setFiltroMaxJogadores(e.target.value.replace(/\D/g, ''))}
-              onKeyDown={e => e.key === 'Enter' && realizarBusca()}
-              style={{ flex: 1, margin: 0 }}
-            />
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flex: 2 }}>
-            <span style={{ whiteSpace: 'nowrap', fontWeight: '500', color: '#555' }}>Lançado entre:</span>
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              className="form-input"
-              placeholder="Início"
-              value={filtroAnoInicio}
-              onChange={e => setFiltroAnoInicio(e.target.value.replace(/\D/g, ''))}
-              onKeyDown={e => e.key === 'Enter' && realizarBusca()}
-              style={{ flex: 1, margin: 0 }}
-            />
-            <input
-              type="text"
-              inputMode="numeric"
-              pattern="[0-9]*"
-              className="form-input"
-              placeholder="Fim"
-              value={filtroAnoFim}
-              onChange={e => setFiltroAnoFim(e.target.value.replace(/\D/g, ''))}
-              onKeyDown={e => e.key === 'Enter' && realizarBusca()}
-              style={{ flex: 1, margin: 0 }}
-            />
-          </div>
+          <button className="btn btn-primary" onClick={realizarBusca} style={{ margin: 0 }}>
+            Buscar
+          </button>
+          <button className="btn btn-primary" onClick={redefinirFiltros} style={{ margin: 0 }}>
+            Limpar Filtros
+          </button>
         </div>
       </div>
 
@@ -382,8 +306,7 @@ function PaginaLista() {
           <h4 style={{ margin: '0 0 0.5rem 0', color: '#0056b3' }}>Sobre a categoria "{filtroCategoria}"</h4>
           <p style={{ margin: 0, color: '#333', fontSize: '0.9rem', lineHeight: '1.5' }}>{descricaoCategoria}</p>
         </div>
-      )
-      }
+      )}
 
       {/* Lista vazia */}
       {
@@ -465,35 +388,7 @@ function PaginaLista() {
                   </div>
 
                   {/* Nome */}
-                  <h2 className="jogo-card-nome">{jogo.nome}</h2>
-
-                  {/* Número de jogadores e ano */}
-                  <p className="jogo-card-info">
-                    👥 {jogo.minJogadores === jogo.maxJogadores
-                      ? `${jogo.minJogadores} jogadores`
-                      : `${jogo.minJogadores}–${jogo.maxJogadores} jogadores`
-                    }
-                    {jogo.anoLancamento && ` · 📅 ${jogo.anoLancamento}`}
-                  </p>
-
-                  {/* Descrição (se houver) */}
-                  {jogo.descricao && (
-                    <p className="jogo-card-descricao">{jogo.descricao}</p>
-                  )}
-
-                  {/* Botões de editar e excluir */}
-                  <div className="jogo-card-acoes" style={{ marginTop: 'auto' }}>
-                    <Link to={`/editar/${jogo.id}`} className="btn btn-secondary btn-sm">
-                      ✏️ Editar
-                    </Link>
-                    <button
-                      className="btn btn-danger btn-sm"
-                      onClick={() => abrirModalExclusao(jogo)}
-                    >
-                      🗑️ Excluir
-                    </button>
-                  </div>
-
+                  <h2 className="jogo-card-nome" style={{ marginBottom: '1rem' }}>{jogo.nome}</h2>
                 </div>
               ))}
             </div>
@@ -517,4 +412,4 @@ function PaginaLista() {
   )
 }
 
-export default PaginaLista
+export default PaginaMinhaColecao

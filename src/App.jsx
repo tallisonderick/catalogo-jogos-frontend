@@ -4,13 +4,16 @@ import Navbar from './components/Navbar'
 import PaginaLista from './pages/PaginaLista'
 import PaginaNovo from './pages/PaginaNovo'
 import PaginaEditar from './pages/PaginaEditar'
+import PaginaNovaCategoria from './pages/PaginaNovaCategoria'
+import PaginaMinhaColecao from './pages/PaginaMinhaColecao'
+import PaginaListaDesejos from './pages/PaginaListaDesejos'
 
 /**
  * App — componente raiz da aplicação.
  *
  * Define o layout global (Navbar + conteúdo) e as rotas:
  *   /           → PaginaLista  (catálogo de jogos)
- *   /novo       → PaginaNovo   (formulário de criação)
+ *   /novojogo       → PaginaNovo   (formulário de criação)
  *   /editar/:id → PaginaEditar (formulário de edição)
  */
 function App() {
@@ -45,13 +48,16 @@ function App() {
 
           {/* Definição das rotas
               Route path="/"          → rota exata da lista
-              Route path="/novo"      → formulário de criação
+              Route path="/novojogo"      → formulário de criação
               Route path="/editar/:id"→ :id é um parâmetro dinâmico (ex: /editar/3)
           */}
           <Routes>
-            <Route path="/"            element={<PaginaLista />} />
-            <Route path="/novo"        element={<PaginaNovo />} />
-            <Route path="/editar/:id"  element={<PaginaEditar />} />
+            <Route path="/" element={<PaginaLista />} />
+            <Route path="/minhacolecao" element={<PaginaMinhaColecao />} />
+            <Route path="/listadesejos" element={<PaginaListaDesejos />} />
+            <Route path="/novojogo" element={<PaginaNovo />} />
+            <Route path="/novacategoria" element={<PaginaNovaCategoria />} />
+            <Route path="/editar/:id" element={<PaginaEditar />} />
           </Routes>
 
         </div>
